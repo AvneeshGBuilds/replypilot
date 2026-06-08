@@ -38,9 +38,9 @@ function avatarGradient(name: string) {
 }
 
 function ratingInfo(rating: number) {
-  if (rating >= 4) return { bar: "bg-emerald-400", badge: "text-emerald-700 bg-emerald-50 border-emerald-200", label: "Positive" };
-  if (rating === 3) return { bar: "bg-amber-400", badge: "text-amber-700 bg-amber-50 border-amber-200", label: "Neutral" };
-  return { bar: "bg-rose-500", badge: "text-rose-700 bg-rose-50 border-rose-200", label: "Negative" };
+  if (rating >= 4) return { border: "border-l-emerald-400", badge: "text-emerald-700 bg-emerald-50 border-emerald-200", label: "Positive" };
+  if (rating === 3) return { border: "border-l-amber-400", badge: "text-amber-700 bg-amber-50 border-amber-200", label: "Neutral" };
+  return { border: "border-l-rose-500", badge: "text-rose-700 bg-rose-50 border-rose-200", label: "Negative" };
 }
 
 export default function Dashboard() {
@@ -88,7 +88,7 @@ export default function Dashboard() {
     });
   }, [user]);
 
-  function handleOnboardingComplete(biz: string) {
+  function handleOnboardingComplete(biz: string, _contactEmail?: string, _tone?: number) {
     setBusinessName(biz);
     setShowOnboarding(false);
   }
@@ -180,8 +180,8 @@ export default function Dashboard() {
         {/* Nav */}
         <nav className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-9 h-9 bg-violet-600 rounded-xl flex items-center justify-center shadow-md shadow-violet-200 ring-2 ring-violet-100">
+              <svg className="w-4.5 h-4.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: "1.125rem", height: "1.125rem" }}>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
@@ -210,6 +210,8 @@ export default function Dashboard() {
             </button>
           </div>
         </nav>
+        {/* Subtle gradient line below nav */}
+        <div className="h-px bg-gradient-to-r from-transparent via-violet-200/60 to-transparent" />
 
         <div className="max-w-2xl mx-auto px-4 py-8 space-y-4">
 
@@ -217,14 +219,14 @@ export default function Dashboard() {
           <AnimatePresence>
             {reviews.length > 0 && (
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-3 gap-3">
-                <StatCard label="Reviews" value={String(reviews.length)} icon={
-                  <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                <StatCard label="Reviews" value={String(reviews.length)} variant="violet" icon={
+                  <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                 } />
-                <StatCard label="Responded" value={`${responseRate}%`} highlight={responseRate === 100} icon={
-                  <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <StatCard label="Responded" value={`${responseRate}%`} highlight={responseRate === 100} variant="emerald" icon={
+                  <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 } />
-                <StatCard label="Avg rating" value={avgRating} icon={
-                  <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                <StatCard label="Avg rating" value={avgRating} variant="amber" icon={
+                  <svg className="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
                 } />
               </motion.div>
             )}
@@ -241,7 +243,7 @@ export default function Dashboard() {
           </div>
 
           {/* Auto-post toggle */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-4 flex items-center justify-between">
+          <div className={`bg-white rounded-2xl border border-gray-100 p-4 flex items-center justify-between transition-all ${autoPost ? "ring-2 ring-violet-200 shadow-[0_0_0_4px_rgba(124,58,237,0.06)]" : ""}`}>
             <div className="flex items-center gap-3">
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${autoPost ? "bg-violet-100" : "bg-gray-100"}`}>
                 <svg className={`w-4 h-4 transition-colors ${autoPost ? "text-violet-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -293,22 +295,22 @@ export default function Dashboard() {
           <AnimatePresence>
             {pending.length === 0 && posted.length === 0 && !addingTest && (
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="bg-white rounded-2xl border border-gray-100 py-14 flex flex-col items-center text-center px-6">
-                <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                  className="w-14 h-14 bg-violet-50 rounded-2xl flex items-center justify-center mb-4">
-                  <svg className="w-7 h-7 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                className="bg-white rounded-2xl border border-gray-100 py-16 flex flex-col items-center text-center px-6">
+                <motion.div animate={{ y: [0, -6, 0] }} transition={{ repeat: Infinity, duration: 3.2, ease: "easeInOut" }}
+                  className="w-16 h-16 bg-violet-50 rounded-2xl flex items-center justify-center mb-5 shadow-[0_2px_16px_rgba(124,58,237,0.10)]">
+                  <svg className="w-8 h-8 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                   </svg>
                 </motion.div>
-                <p className="font-bold text-gray-900 mb-1">No reviews yet</p>
-                <p className="text-sm text-gray-400 mb-6 max-w-xs">Connect your Google Business account to start — or try a test review to see how it works.</p>
-                <div className="flex flex-col items-center gap-2.5 w-full max-w-xs">
+                <p className="font-black text-gray-900 text-lg mb-2">No reviews yet</p>
+                <p className="text-sm text-gray-400 mb-8 max-w-xs leading-relaxed">Connect your Google Business account to start — or try a test review to see how it works.</p>
+                <div className="flex flex-col items-center gap-3 w-full max-w-xs">
                   <motion.button whileTap={{ scale: 0.97 }} onClick={addTestReview}
-                    className="w-full bg-violet-600 hover:bg-violet-700 text-white text-sm py-2.5 rounded-xl font-semibold transition shadow-sm shadow-violet-100">
+                    className="w-full bg-violet-600 hover:bg-violet-700 text-white text-sm py-3 rounded-xl font-bold transition shadow-md shadow-violet-200">
                     Try a test review
                   </motion.button>
                   <motion.button whileTap={{ scale: 0.97 }} onClick={backfillReviews} disabled={backfilling}
-                    className="w-full border border-gray-200 hover:border-violet-200 hover:bg-violet-50 text-gray-600 hover:text-violet-700 text-sm py-2.5 rounded-xl font-medium transition disabled:opacity-50">
+                    className="w-full border-2 border-gray-200 hover:border-violet-200 hover:bg-violet-50 text-gray-600 hover:text-violet-700 text-sm py-3 rounded-xl font-semibold transition disabled:opacity-50">
                     {backfilling ? "Fetching past reviews…" : "Reply to past unanswered reviews"}
                   </motion.button>
                   <a href="/settings" className="text-xs text-gray-400 hover:text-violet-600 transition mt-1">Configure settings →</a>
@@ -373,15 +375,21 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({ label, value, icon, highlight }: { label: string; value: string; icon: React.ReactNode; highlight?: boolean }) {
+function StatCard({ label, value, icon, highlight, variant }: {
+  label: string; value: string; icon: React.ReactNode; highlight?: boolean; variant: "violet" | "emerald" | "amber"
+}) {
+  const bg = variant === "violet" ? "bg-violet-50" : variant === "emerald" ? "bg-emerald-50" : "bg-amber-50";
+  const borderL = variant === "violet" ? "border-l-violet-400" : variant === "emerald" ? "border-l-emerald-400" : "border-l-amber-400";
+  const textColor = highlight ? "text-emerald-700" : "text-gray-900";
+
   return (
     <motion.div whileHover={{ y: -1 }}
-      className={`bg-white rounded-2xl border p-4 ${highlight ? "border-emerald-200 bg-emerald-50/50" : "border-gray-100"}`}>
+      className={`${bg} rounded-2xl border border-gray-100 border-l-4 ${borderL} p-4`}>
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs text-gray-400 font-medium">{label}</p>
         {icon}
       </div>
-      <p className={`text-2xl font-black ${highlight ? "text-emerald-700" : "text-gray-900"}`}>{value}</p>
+      <p className={`text-2xl font-black ${textColor}`}>{value}</p>
     </motion.div>
   );
 }
@@ -408,7 +416,7 @@ function ReviewCard({ review, index, editingId, editText, posting, deleting, onE
   const isPosting = posting === review.id;
   const isDeleting = deleting === review.id;
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const { bar, badge } = ratingInfo(review.rating);
+  const { border, badge } = ratingInfo(review.rating);
 
   return (
     <motion.div layout
@@ -416,18 +424,17 @@ function ReviewCard({ review, index, editingId, editText, posting, deleting, onE
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -16, transition: { duration: 0.18 } }}
       transition={{ type: "spring", stiffness: 400, damping: 30, delay: index * 0.04 }}
-      className="bg-white rounded-2xl border border-gray-100 overflow-hidden mb-3 group"
+      className={`bg-white rounded-2xl border border-gray-100 border-l-4 ${border} overflow-hidden mb-3 group shadow-[0_2px_16px_rgba(0,0,0,0.04)]`}
     >
-      <div className={`h-0.5 ${bar}`} />
       <div className="p-5">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3">
-            <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${avatarGradient(review.reviewerName)} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
+            <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${avatarGradient(review.reviewerName)} flex items-center justify-center text-white text-xs font-bold flex-shrink-0`}>
               {initials(review.reviewerName)}
             </div>
             <div>
-              <p className="font-semibold text-gray-900 text-sm leading-tight">{review.reviewerName}</p>
+              <p className="font-bold text-gray-900 text-sm leading-tight">{review.reviewerName}</p>
               <StarRating rating={review.rating} />
             </div>
           </div>
@@ -437,24 +444,24 @@ function ReviewCard({ review, index, editingId, editText, posting, deleting, onE
             </span>
             {review.status === "posted" && (
               <span className="text-xs bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-1 rounded-full font-semibold">
-                Posted ✓
+                Posted
               </span>
             )}
           </div>
         </div>
 
         {/* Review text */}
-        <p className="text-sm text-gray-500 leading-relaxed mb-3 bg-gray-50 rounded-xl px-3.5 py-3 italic">
-          "{review.reviewText}"
-        </p>
+        <div className="bg-gray-50 rounded-xl px-4 py-3 mb-3">
+          <p className="text-sm text-gray-500 leading-relaxed italic">"{review.reviewText}"</p>
+        </div>
 
         {/* AI Reply */}
-        <div className="bg-gradient-to-br from-violet-50 to-white border border-violet-100 rounded-xl p-3.5 mb-4">
+        <div className="bg-gradient-to-br from-violet-50 to-indigo-50/30 border border-violet-100 rounded-xl p-3.5 mb-4">
           <div className="flex items-center gap-1.5 mb-2">
             <svg className="w-3.5 h-3.5 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            <span className="text-xs font-bold text-violet-500 uppercase tracking-wide">Suggested reply</span>
+            <span className="text-xs font-bold text-violet-500 uppercase tracking-wide">AI Reply</span>
           </div>
           <AnimatePresence mode="wait">
             {isEditing ? (
@@ -518,11 +525,11 @@ function ReviewCard({ review, index, editingId, editText, posting, deleting, onE
 
           {review.status !== "posted" && (
             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onApprove} disabled={isPosting}
-              className="ml-auto bg-violet-600 hover:bg-violet-700 text-white text-xs px-4 py-2 rounded-lg font-semibold transition disabled:opacity-50 flex items-center gap-1.5 shadow-sm shadow-violet-100">
+              className="ml-auto bg-violet-600 hover:bg-violet-700 text-white text-xs px-5 py-2.5 rounded-xl font-bold transition disabled:opacity-50 flex items-center gap-1.5 shadow-md shadow-violet-200">
               {isPosting ? (
                 <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />Posting…</>
               ) : (
-                <><svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>Approve & Post</>
+                <><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>Approve &amp; Post</>
               )}
             </motion.button>
           )}

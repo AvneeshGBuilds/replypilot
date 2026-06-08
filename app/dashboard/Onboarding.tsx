@@ -53,10 +53,13 @@ export default function Onboarding({ onComplete }: Props) {
         transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
       >
+        {/* Violet gradient top border */}
+        <div className="h-1 bg-gradient-to-r from-violet-500 via-indigo-500 to-purple-500" />
+
         {/* Progress bar */}
-        <div className="h-1 bg-gray-100">
+        <div className="h-0.5 bg-gray-100">
           <motion.div
-            className="h-1 bg-violet-600 rounded-full"
+            className="h-0.5 bg-violet-400/40 rounded-full"
             animate={{ width: `${((step + 1) / steps.length) * 100}%` }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
           />
@@ -84,22 +87,48 @@ export default function Onboarding({ onComplete }: Props) {
                 </p>
                 <div className="space-y-3 mb-8">
                   {[
-                    { icon: "⚡", title: "AI reads every review", desc: "Detects sentiment, mentions, and tone" },
-                    { icon: "✍️", title: "Writes a reply for you", desc: "Specific to what the customer said" },
-                    { icon: "✅", title: "You approve or auto-post", desc: "Stay in control or go fully hands-off" },
+                    {
+                      icon: (
+                        <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      ),
+                      title: "AI reads every review",
+                      desc: "Detects sentiment, mentions, and tone"
+                    },
+                    {
+                      icon: (
+                        <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      ),
+                      title: "Writes a reply for you",
+                      desc: "Specific to what the customer said"
+                    },
+                    {
+                      icon: (
+                        <svg className="w-4 h-4 text-violet-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      ),
+                      title: "You approve or auto-post",
+                      desc: "Stay in control or go fully hands-off"
+                    },
                   ].map((f) => (
                     <div key={f.title} className="flex items-start gap-3 bg-gray-50 rounded-xl p-3.5">
-                      <span className="text-xl mt-0.5">{f.icon}</span>
+                      <div className="w-7 h-7 bg-violet-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+                        {f.icon}
+                      </div>
                       <div>
-                        <p className="text-sm font-semibold text-gray-900">{f.title}</p>
+                        <p className="text-sm font-bold text-gray-900">{f.title}</p>
                         <p className="text-xs text-gray-500 mt-0.5">{f.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <motion.button whileTap={{ scale: 0.98 }} onClick={() => setStep(1)}
-                  className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3.5 rounded-2xl font-bold text-sm transition shadow-sm shadow-violet-200">
-                  Get started →
+                  className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3.5 rounded-2xl font-bold text-sm transition shadow-md shadow-violet-200">
+                  Get started
                 </motion.button>
               </motion.div>
             )}
@@ -135,8 +164,8 @@ export default function Onboarding({ onComplete }: Props) {
                 <div className="flex gap-3">
                   <button onClick={() => setStep(0)} className="flex-1 border border-gray-200 text-gray-600 py-3 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition">Back</button>
                   <motion.button whileTap={{ scale: 0.98 }} onClick={() => setStep(2)} disabled={!businessName.trim()}
-                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-2xl font-bold text-sm transition disabled:opacity-40 shadow-sm shadow-violet-200">
-                    Continue →
+                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-2xl font-bold text-sm transition disabled:opacity-40 shadow-md shadow-violet-200">
+                    Continue
                   </motion.button>
                 </div>
               </motion.div>
@@ -153,7 +182,7 @@ export default function Onboarding({ onComplete }: Props) {
                         tone === t.value ? "border-violet-500 bg-violet-50" : "border-gray-100 hover:border-gray-200 bg-white"
                       }`}>
                       <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-colors ${
+                        <div className={`w-9 h-9 rounded-full flex items-center justify-center font-black text-sm transition-colors flex-shrink-0 ${
                           tone === t.value ? "bg-violet-600 text-white" : "bg-gray-100 text-gray-500"
                         }`}>{t.value}</div>
                         <div className="text-left">
@@ -162,7 +191,7 @@ export default function Onboarding({ onComplete }: Props) {
                         </div>
                       </div>
                       {tone === t.value && (
-                        <svg className="w-4 h-4 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-violet-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                         </svg>
                       )}
@@ -172,8 +201,8 @@ export default function Onboarding({ onComplete }: Props) {
                 <div className="flex gap-3">
                   <button onClick={() => setStep(1)} className="flex-1 border border-gray-200 text-gray-600 py-3 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition">Back</button>
                   <motion.button whileTap={{ scale: 0.98 }} onClick={() => setStep(3)}
-                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-2xl font-bold text-sm transition shadow-sm shadow-violet-200">
-                    Continue →
+                    className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-2xl font-bold text-sm transition shadow-md shadow-violet-200">
+                    Continue
                   </motion.button>
                 </div>
               </motion.div>
@@ -181,18 +210,57 @@ export default function Onboarding({ onComplete }: Props) {
 
             {step === 3 && (
               <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.25 }}>
-                <motion.div
-                  animate={{ scale: [1, 1.08, 1] }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  className="w-14 h-14 bg-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-200"
-                >
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
-                </motion.div>
-                <h2 className="text-xl font-black text-gray-900 mb-3">You're all set, {businessName}!</h2>
-                <p className="text-sm text-gray-500 leading-relaxed mb-6">
-                  ReplyPilot is ready to generate replies. You have 1 month free — no card needed. Try a test review to see how it works, then go to Settings anytime to fine-tune your templates and language.
+                {/* Confetti dots */}
+                <div className="relative mb-6">
+                  {[
+                    { x: "10%", y: "20%", color: "bg-violet-400", size: "w-2 h-2", delay: 0.1 },
+                    { x: "80%", y: "10%", color: "bg-emerald-400", size: "w-1.5 h-1.5", delay: 0.15 },
+                    { x: "90%", y: "50%", color: "bg-amber-400", size: "w-2 h-2", delay: 0.2 },
+                    { x: "5%", y: "60%", color: "bg-indigo-400", size: "w-1.5 h-1.5", delay: 0.12 },
+                    { x: "70%", y: "70%", color: "bg-rose-400", size: "w-2 h-2", delay: 0.18 },
+                    { x: "40%", y: "5%", color: "bg-cyan-400", size: "w-1.5 h-1.5", delay: 0.08 },
+                  ].map((dot, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      transition={{ delay: dot.delay, duration: 0.4, ease: "backOut" }}
+                      className={`absolute ${dot.color} ${dot.size} rounded-full`}
+                      style={{ left: dot.x, top: dot.y }}
+                    />
+                  ))}
+                  <div className="flex justify-center">
+                    <motion.div
+                      animate={{ scale: [1, 1.12, 1] }}
+                      transition={{ duration: 0.6, delay: 0.1, ease: "easeInOut" }}
+                      className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 relative"
+                    >
+                      <motion.svg
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <motion.path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M5 13l4 4L19 7"
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 0.45, delay: 0.3, ease: "easeOut" }}
+                        />
+                      </motion.svg>
+                    </motion.div>
+                  </div>
+                </div>
+
+                <h2 className="text-xl font-black text-gray-900 mb-3 text-center">You're all set, {businessName}!</h2>
+                <p className="text-sm text-gray-500 leading-relaxed mb-6 text-center">
+                  ReplyPilot is ready to generate replies. You have 1 month free — no card needed.
                 </p>
                 <div className="bg-violet-50 border border-violet-100 rounded-2xl p-4 mb-8">
                   <p className="text-xs font-bold text-violet-700 uppercase tracking-wide mb-2">Quick tip</p>
@@ -201,8 +269,8 @@ export default function Onboarding({ onComplete }: Props) {
                   </p>
                 </div>
                 <motion.button whileTap={{ scale: 0.98 }} onClick={finish} disabled={saving}
-                  className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3.5 rounded-2xl font-bold text-sm transition shadow-sm shadow-violet-200 disabled:opacity-50">
-                  {saving ? "Saving…" : "Go to dashboard →"}
+                  className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3.5 rounded-2xl font-bold text-sm transition shadow-md shadow-violet-200 disabled:opacity-50">
+                  {saving ? "Saving…" : "Go to dashboard"}
                 </motion.button>
               </motion.div>
             )}
