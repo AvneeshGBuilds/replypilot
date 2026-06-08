@@ -3,11 +3,11 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 const TONE_INSTRUCTIONS: Record<number, string> = {
-  1: "Write in a formal, corporate tone. Use complete sentences, no contractions, professional language. Sound like a polished brand statement.",
-  2: "Write professionally but with warmth. Polished yet approachable — like a trusted manager responding.",
-  3: "Write naturally and conversationally. Sound like a real human who genuinely cares. Use contractions. Be warm but not over the top.",
-  4: "Write casually and personally. Sound like a friendly owner who knows their regulars. Relaxed, genuine, maybe a touch of personality.",
-  5: "Write in a very personal, heartfelt way. Sound completely human — like the owner themselves typed this at their desk. Use natural speech patterns, contractions, and real emotion. It should NOT sound like AI at all.",
+  1: "Write formally and professionally. No contractions. Polished, measured language. But still human — not a press release.",
+  2: "Write professionally but warmly. You're a manager who genuinely cares. Use occasional contractions. Sound real.",
+  3: "Write like a real person who owns this place and actually read the review. Natural, warm, a little conversational. Not stiff.",
+  4: "Write like a friendly owner texting a regular. Casual, genuine, a little personal. Like you dashed this off between customers.",
+  5: "Write exactly how a real small business owner would type this — maybe a little rushed, genuine, no polish. It should feel like a human typed it on their phone, not a marketing team.",
 };
 
 const LANGUAGE_INSTRUCTIONS: Record<string, string> = {
@@ -42,35 +42,74 @@ export async function generateReviewReply(
   const contactEmail = options?.contactEmail || "us directly";
   const sentiment = rating >= 4 ? "positive" : rating === 3 ? "neutral" : "negative";
 
-  const templateSection = options?.template
-    ? `\nFollow this specific outline:\n${options.template}`
-    : "";
+  const contentGuidance = options?.template
+    ? `CONTENT — follow this outline the business owner has set for ${sentiment} reviews:
+${options.template}
+${sentiment === "negative" ? `Also: always invite them to contact at ${contactEmail}.` : ""}`
+    : `CONTENT:
+- Pick ONE specific thing they mentioned and reference it directly. Not vaguely — specifically.
+- For negative reviews: Start with a real apology (not "we're sorry you felt that way"). Acknowledge exactly what went wrong. Invite them to contact you at ${contactEmail}.
+- For neutral reviews: Thank them, acknowledge the specific criticism, invite them back.
+- For positive reviews: Acknowledge a specific detail they mentioned. Express genuine appreciation. Invite them back naturally.`;
 
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-  const prompt = `You are writing a real Google Business review reply for "${businessName}".
+  const prompt = `You are a real business owner writing a reply to a Google review for "${businessName}". You are NOT an AI assistant. You are a person.
 
-REVIEW DETAILS:
-- Reviewer name: ${reviewerName}
-- Star rating: ${rating}/5 (${sentiment})
-- Review text: "${reviewText}"
+REVIEW:
+- From: ${reviewerName}
+- Stars: ${rating}/5 (${sentiment})
+- Text: "${reviewText}"
 
-TONE INSTRUCTION: ${TONE_INSTRUCTIONS[tone]}
+TONE: ${TONE_INSTRUCTIONS[tone]}
 
-LANGUAGE INSTRUCTION: ${LANGUAGE_INSTRUCTIONS[language]}
-${templateSection}
+LANGUAGE: ${LANGUAGE_INSTRUCTIONS[language]}
 
-STRICT RULES:
-- Maximum 3 sentences. Do not exceed this.
-- Reference something SPECIFIC from what they wrote — never write a generic reply
-- For negative reviews (1-2 stars): lead with a genuine apology, acknowledge their specific complaint, then invite them to reach out at ${contactEmail}
-- For neutral reviews (3 stars): thank them, address their specific concern or suggestion, invite them back
-- For positive reviews (4-5 stars): thank them genuinely, echo one specific detail they mentioned, express you can't wait to see them again
-- Do NOT start with "Thank you for your review" — it sounds robotic
-- Do NOT use phrases like "We strive to" or "It is our goal" or "We take pride in" — they sound fake
-- Do NOT use exclamation marks more than once per reply
-- Sign off naturally as "— ${businessName}" (just the name, no "The ... Team")
-- Output ONLY the reply text. Nothing else.`;
+RULES — follow every single one:
+
+LENGTH & STRUCTURE:
+- 2-3 sentences maximum. No more.
+- Mix short and longer sentences — don't make them all the same length.
+- No bullet points, no lists, no headers.
+
+${contentGuidance}
+
+SIGN OFF:
+- End with: — ${businessName}
+
+FORBIDDEN PHRASES — never use any of these:
+- "Thank you for your review"
+- "Thank you for your feedback"
+- "We appreciate your feedback"
+- "We strive to"
+- "It is our goal"
+- "We take pride in"
+- "We are committed to"
+- "We are sorry to hear"
+- "We apologize for any inconvenience"
+- "Your satisfaction is our priority"
+- "We hope to see you again soon"
+- "Please don't hesitate to"
+- "At [business name], we..."
+- "As always"
+- "Certainly"
+- "Absolutely"
+- "Wonderful"
+- "Fantastic"
+- "Amazing"
+- "Delighted"
+- "Thrilled"
+
+FORBIDDEN PATTERNS:
+- Do NOT start with "Thank you"
+- Do NOT use more than one exclamation mark in the whole reply
+- Do NOT use em-dashes (—) anywhere except the sign-off
+- Do NOT sound like a PR department
+- Do NOT write the same opening every time
+- Do NOT use the reviewer's first name more than once
+- Do NOT be sycophantic or over-the-top
+
+Output ONLY the reply. No quotes around it. Nothing else.`;
 
   const result = await model.generateContent(prompt);
   return result.response.text().trim();
