@@ -1,8 +1,10 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
-
 const FROM = "ReplyPilot <onboarding@resend.dev>";
+
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY!);
+}
 
 function stars(rating: number) {
   return "★".repeat(rating) + "☆".repeat(5 - rating);
@@ -120,7 +122,7 @@ export async function sendNewReviewEmail({
 </body>
 </html>`;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM,
     to: toEmail,
     subject: `${stars(rating)} New ${rating}-star review from ${reviewerName} — ${businessName}`,
