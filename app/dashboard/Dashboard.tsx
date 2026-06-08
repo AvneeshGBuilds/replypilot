@@ -54,6 +54,7 @@ export default function Dashboard() {
   const [autoPost, setAutoPost] = useState(false);
   const [savingToggle, setSavingToggle] = useState(false);
   const [addingTest, setAddingTest] = useState(false);
+  const [backfilling, setBackfilling] = useState(false);
   const [businessName, setBusinessName] = useState("");
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
@@ -99,6 +100,17 @@ export default function Dashboard() {
     setAutoPost(val);
     await setDoc(doc(db, "settings", user.uid), { autoPost: val }, { merge: true });
     setSavingToggle(false);
+  }
+
+  async function backfillReviews() {
+    if (!user) return;
+    setBackfilling(true);
+    await fetch("/api/reviews/backfill", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user.uid }),
+    });
+    setBackfilling(false);
   }
 
   async function addTestReview() {
@@ -321,6 +333,15 @@ export default function Dashboard() {
                     className="bg-violet-600 hover:bg-violet-700 text-white text-sm px-6 py-2.5 rounded-xl font-semibold shadow-sm shadow-violet-200"
                   >
                     Try a test review
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={backfillReviews}
+                    disabled={backfilling}
+                    className="text-xs text-violet-600 hover:text-violet-800 border border-violet-200 hover:border-violet-400 px-5 py-2 rounded-xl font-semibold transition disabled:opacity-50"
+                  >
+                    {backfilling ? "Fetching past reviews…" : "Reply to past unanswered reviews"}
                   </motion.button>
                   <a href="/settings" className="text-xs text-gray-400 hover:text-violet-600 transition font-medium">
                     Configure settings →

@@ -26,6 +26,25 @@ export async function listLocations(accessToken: string) {
   return locations;
 }
 
+export async function fetchUnansweredReviews(
+  accessToken: string,
+  locationName: string
+) {
+  const allReviews: unknown[] = [];
+  let pageToken = "";
+
+  do {
+    const url = `https://mybusiness.googleapis.com/v4/${locationName}/reviews?orderBy=updateTime+desc&pageSize=50${pageToken ? `&pageToken=${pageToken}` : ""}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error?.message || "Failed to fetch reviews");
+    allReviews.push(...(data.reviews || []));
+    pageToken = data.nextPageToken || "";
+  } while (pageToken);
+
+  return allReviews.filter((r: unknown) => !(r as { reviewReply?: unknown }).reviewReply);
+}
+
 export async function fetchNewReviews(
   accessToken: string,
   locationName: string,
