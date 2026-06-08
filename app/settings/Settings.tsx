@@ -30,11 +30,7 @@ const TONE_LABELS = [
   { value: 5, label: "Personal", description: "Heartfelt and human — barely sounds like AI" },
 ];
 
-const DEFAULT_TEMPLATES = {
-  positive: "Thank them genuinely. Mention something specific they highlighted. Let them know we look forward to seeing them again.",
-  neutral: "Thank them for their feedback. Acknowledge any concerns they raised. Reassure them we're always improving and invite them back.",
-  negative: "Sincerely apologize for their experience. Acknowledge the specific issue they mentioned. Offer to make it right and provide our contact info. Keep it humble and genuine.",
-};
+import { DEFAULT_TEMPLATES } from "@/lib/claude";
 
 type Settings = {
   autoPost: boolean;
@@ -63,7 +59,19 @@ export default function SettingsPage() {
     return onAuthStateChanged(auth, async (user) => {
       if (!user) { router.push("/login"); return; }
       const snap = await getDoc(doc(db, "settings", user.uid));
-      if (snap.exists()) setSettings((prev) => ({ ...prev, ...snap.data() as Partial<Settings> }));
+      if (snap.exists()) {
+        const data = snap.data() as Partial<Settings>;
+        // Merge defaults for any fields not yet saved (e.g. templates on first visit)
+        setSettings((prev) => ({
+          ...prev,
+          ...data,
+          templates: { ...prev.templates, ...data.templates },
+        }));
+        // If templates weren't in Firestore yet, write them now so routes always have them
+        if (!data.templates) {
+          setDoc(doc(db, "settings", user.uid), { templates: DEFAULT_TEMPLATES }, { merge: true });
+        }
+      }
       setLoading(false);
     });
   }, [router]);

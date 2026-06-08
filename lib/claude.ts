@@ -2,6 +2,12 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
+export const DEFAULT_TEMPLATES = {
+  positive: "Thank them genuinely. Mention something specific they highlighted. Let them know we look forward to seeing them again.",
+  neutral: "Thank them for their feedback. Acknowledge the specific concern they raised. Reassure them we're always improving and invite them back.",
+  negative: "Sincerely apologize for their experience. Acknowledge the specific issue they mentioned. Offer to make it right and provide our contact info. Keep it humble and genuine.",
+};
+
 const TONE_INSTRUCTIONS: Record<number, string> = {
   1: "Write formally and professionally. No contractions. Polished, measured language. But still human — not a press release.",
   2: "Write professionally but warmly. You're a manager who genuinely cares. Use occasional contractions. Sound real.",

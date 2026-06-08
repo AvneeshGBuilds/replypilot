@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
-import { generateReviewReply } from "@/lib/claude";
+import { generateReviewReply, DEFAULT_TEMPLATES } from "@/lib/claude";
 import { sendNewReviewEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -66,9 +66,11 @@ export async function POST(req: NextRequest) {
   const autoPost = settings.autoPost ?? false;
 
   const template = (rating: number) =>
-    rating >= 4 ? settings.templates?.positive
-    : rating === 3 ? settings.templates?.neutral
-    : settings.templates?.negative;
+    rating >= 4
+      ? (settings.templates?.positive || DEFAULT_TEMPLATES.positive)
+      : rating === 3
+      ? (settings.templates?.neutral || DEFAULT_TEMPLATES.neutral)
+      : (settings.templates?.negative || DEFAULT_TEMPLATES.negative);
 
   const review = TEST_REVIEWS[Math.floor(Math.random() * TEST_REVIEWS.length)];
 

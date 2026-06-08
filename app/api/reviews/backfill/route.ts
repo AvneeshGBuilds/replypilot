@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebase-admin";
 import { fetchUnansweredReviews } from "@/lib/google-business";
-import { generateReviewReply } from "@/lib/claude";
+import { generateReviewReply, DEFAULT_TEMPLATES } from "@/lib/claude";
 import { sendNewReviewEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
@@ -39,9 +39,11 @@ export async function POST(req: NextRequest) {
         : review.starRating === "THREE" ? 3
         : review.starRating === "TWO" ? 2 : 1;
 
-      const template = rating >= 4 ? templates?.positive
-        : rating === 3 ? templates?.neutral
-        : templates?.negative;
+      const template = rating >= 4
+        ? (templates?.positive || DEFAULT_TEMPLATES.positive)
+        : rating === 3
+        ? (templates?.neutral || DEFAULT_TEMPLATES.neutral)
+        : (templates?.negative || DEFAULT_TEMPLATES.negative);
 
       const reviewerName = (review.reviewer as Record<string, string>)?.displayName || "Anonymous";
       const reviewText = (review.comment as string) || "";
