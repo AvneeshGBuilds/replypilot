@@ -145,13 +145,13 @@ export default function Dashboard() {
 
   async function deleteReview(reviewId: string) {
     if (!user) return;
-    setDeleting(reviewId);
-    await fetch("/api/reviews/delete", {
+    // Optimistic: remove immediately; onSnapshot restores if server fails
+    setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+    fetch("/api/reviews/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reviewDocId: reviewId, userId: user.uid }),
     });
-    setDeleting(null);
   }
 
   async function saveEdit(reviewId: string) {

@@ -9,26 +9,18 @@ export const DEFAULT_TEMPLATES = {
 };
 
 const TONE_MAP: Record<number, string> = {
-  1: "formal and measured — no contractions, professional, but still a real human not a press release",
-  2: "warm and professional — occasional contractions, like a business owner who genuinely cares",
+  1: "formal and measured — no contractions, professional but human",
+  2: "warm and professional — occasional contractions, genuine",
   3: "natural and conversational — friendly, real, not stiff",
-  4: "casual — like texting a regular customer between shifts, relaxed and personal",
-  5: "very human — slightly unpolished, genuine, like typed on a phone in 30 seconds",
+  4: "casual — like texting a regular, relaxed and personal",
+  5: "very human — slightly unpolished, like typed on a phone quickly",
 };
 
 const LANG_MAP: Record<string, string> = {
-  auto: "Match the language of the review exactly.",
-  en: "English.",
-  es: "Spanish.",
-  fr: "French.",
-  de: "German.",
-  pt: "Portuguese.",
-  it: "Italian.",
-  ja: "Japanese.",
-  zh: "Simplified Chinese.",
-  ko: "Korean.",
-  ar: "Arabic.",
-  hi: "Hindi.",
+  auto: "Match the language the review is written in.",
+  en: "English", es: "Spanish", fr: "French", de: "German",
+  pt: "Portuguese", it: "Italian", ja: "Japanese", zh: "Simplified Chinese",
+  ko: "Korean", ar: "Arabic", hi: "Hindi",
 };
 
 export async function generateReviewReply(
@@ -51,43 +43,27 @@ export async function generateReviewReply(
 
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-  const prompt = `You are the owner of "${businessName}" replying to a Google review. You are a real person — write exactly like one.
+  const prompt = `You are writing a Google review reply on behalf of the owner of "${businessName}".
 
-REVIEW (${rating}/5 stars, ${sentiment}):
+REVIEW:
 Reviewer: ${reviewerName}
-"${reviewText || "(no text — rating only)"}"
+Stars: ${rating}/5 (${sentiment})
+Text: "${reviewText || "(no written review)"}"
 
-YOUR REPLY MUST COVER THIS AND ONLY THIS:
-${template}${sentiment === "negative" && contactEmail ? `\nAlso invite them to reach out at ${contactEmail}.` : ""}
+YOUR REPLY MUST DO EXACTLY THIS — follow it literally:
+${template}${sentiment === "negative" && contactEmail !== "us directly" ? `\nAlways include: invite them to contact ${contactEmail}.` : sentiment === "negative" ? `\nAlways include: invite them to reach out directly.` : ""}
 
-TONE: ${TONE_MAP[tone]}
-LANGUAGE: ${LANG_MAP[language]}
-
-EXAMPLES — study the difference:
-
-BAD (sounds like AI):
-"Thank you for your wonderful feedback! We're so glad you enjoyed your experience with us. We strive to provide excellent service and hope to see you again soon!"
-
-GOOD (sounds human):
-"That dish you mentioned — our chef's been perfecting it for two years, glad it finally landed the way it should. See you next time."
-
-BAD (sounds like AI):
-"We sincerely apologize for the inconvenience you experienced. Your satisfaction is our top priority and we are committed to improving."
-
-GOOD (sounds human):
-"A 40-minute wait with cold food at the end — that's on us, and I'm sorry. Reach out at ${contactEmail} and I'll make it right personally."
-
-NOW WRITE THE REPLY. Rules:
-- 2 to 3 sentences. No more.
-- Reference something SPECIFIC from the review (a dish, a name, a wait time — something real, not "your experience")
-- Vary sentence length — not all the same rhythm
+STYLE:
+- Tone: ${TONE_MAP[tone]}
+- Language: ${LANG_MAP[language]}
+- 2-3 sentences maximum
+- Reference something SPECIFIC from their review (exact words, a detail they mentioned) — not just "your experience"
+- Write like a real human owner, not a marketing team
 - End with: — ${businessName}
-- No em-dashes except the sign-off
-- No exclamation marks unless tone is 4 or 5
-- Do NOT start with "Thank you"
-- Do NOT use: "strive to", "committed to", "top priority", "hope to see you", "don't hesitate", "wonderful", "fantastic", "absolutely", "certainly", "delighted"
 
-Output ONLY the reply. No quotes. Nothing else.`;
+DO NOT start with "Thank you". DO NOT use: "strive to", "committed to", "top priority", "hope to see you soon", "don't hesitate", "wonderful", "fantastic", "absolutely", "certainly".
+
+Reply:`;
 
   const result = await model.generateContent(prompt);
   return result.response.text().trim();
