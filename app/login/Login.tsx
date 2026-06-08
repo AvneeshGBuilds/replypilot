@@ -165,7 +165,7 @@ export default function LoginPage() {
             <svg className="w-4 h-4 text-violet-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p className="text-xs text-violet-700 font-medium">Free to try · $29/mo when you're ready · Cancel anytime</p>
+            <p className="text-xs text-violet-700 font-medium">1 month free · then $29/mo · Cancel anytime</p>
           </motion.div>
 
           <motion.button

@@ -192,7 +192,7 @@ export default function Onboarding({ onComplete }: Props) {
                 </motion.div>
                 <h2 className="text-xl font-black text-gray-900 mb-3">You're all set, {businessName}!</h2>
                 <p className="text-sm text-gray-500 leading-relaxed mb-6">
-                  ReplyPilot is ready to generate replies. Try a test review to see how it works, then go to Settings anytime to fine-tune your templates and language.
+                  ReplyPilot is ready to generate replies. You have 1 month free — no card needed. Try a test review to see how it works, then go to Settings anytime to fine-tune your templates and language.
                 </p>
                 <div className="bg-violet-50 border border-violet-100 rounded-2xl p-4 mb-8">
                   <p className="text-xs font-bold text-violet-700 uppercase tracking-wide mb-2">Quick tip</p>
