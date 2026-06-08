@@ -72,7 +72,7 @@ export default function Dashboard() {
         const d = snap.data();
         setAutoPost(d.autoPost ?? false);
         setBusinessName(d.businessName || "");
-        if (!d.onboardingComplete && !d.businessName) setShowOnboarding(true);
+        if (!d.onboardingComplete) setShowOnboarding(true);
       } else {
         setShowOnboarding(true);
       }
